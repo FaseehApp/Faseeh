@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import evalGrammar from './grammar_error_correction'
 
 function createWindow(): void {
   // Create the browser window.
@@ -53,6 +54,9 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
+  evalGrammar('I does not know what you are talking about.').then((correction) => {
+    console.log(correction)
+  })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
