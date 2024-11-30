@@ -1,25 +1,33 @@
 import { useEffect, useState, useMemo } from "react";
-import transcription from './test.json';
+
 interface TranscriptionSegment {
-  startTime: number;
-  endTime: number;
+  start: number;
+  end: number;
   text: string;
 }
 
-function useTranscription( currentTime: number): string {
+function useTranscription(currentTime: number, transcriptionJSON: any): string {
     const [transcriptionData, setTranscriptionData] = useState<TranscriptionSegment[]>([]);
+        
     useEffect(() => {
-        setTranscriptionData(transcription);
-      }, []);    
+      if (transcriptionJSON) {
+        try {
+          const segments = transcriptionJSON.data.segments || [];
+          setTranscriptionData(segments);
+        } catch (error) {
+          console.error('Error parsing transcription:', error);
+          setTranscriptionData([]);
+        }
+      }
+    }, [transcriptionJSON]);
+
     const currentTranscription = useMemo(() => {
         return transcriptionData.find(
-            t => currentTime >= t.startTime && currentTime <= t.endTime
+            t => currentTime >= t.start && currentTime <= t.end
         );
     }, [transcriptionData, currentTime]);
 
-
-
-    return currentTranscription?.text ?? '';};
-
+    return currentTranscription?.text ?? '';
+}
 
 export { useTranscription };
