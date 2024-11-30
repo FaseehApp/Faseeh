@@ -39,17 +39,15 @@ const VideoPlayer: React.FC<VideoPLayerProps> = ({ videoStreamlink, linkType }) 
   }, [player]);
   
   useEffect(() => {
-    console.log("currentID", currentID);
     const checkTranscription = () => {
       const savedTranscription = localStorage.getItem(`transcription_${currentID}`);
-      if (savedTranscription) {
-        setIsLoading(false);
+      if (!savedTranscription) {
+        setIsLoading(true);
       }
     };
 
     checkTranscription();
     const interval = setInterval(checkTranscription, 1000);
-    console.log("isloading", isLoading);
     return () => clearInterval(interval);
   }, [currentID]);
 
