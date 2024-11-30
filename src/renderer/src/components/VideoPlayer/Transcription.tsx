@@ -12,14 +12,10 @@ const Transcription: React.FC<TranscriptionProps> = ({ currentTime,id }) => {
         return null;
     }
     useEffect(() => {
-        console.log("id", id);
         const storedTranscription = localStorage.getItem(`transcription_${id}`);
-        console.log("storedTranscription", storedTranscription);
         if (storedTranscription) {
-            console.log("existing transcription found");
             setTranscriptionJSON(JSON.parse(storedTranscription));
         } else {
-            console.log("fetching new transcription");
             setTranscriptionJSON(undefined);
             getTranscription(id).then((res) => {
                 setTranscriptionJSON(res);
