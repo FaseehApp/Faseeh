@@ -22,7 +22,11 @@
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^3.0.0"
+    "@electron-toolkit/utils": "^3.0.0",
+    "@langchain/groq": "^0.1.2",
+    "@rollup/rollup-linux-x64-gnu": "^4.27.4",
+    "dotenv": "^16.4.5",
+    "langchain": "^0.3.6"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",

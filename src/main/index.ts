@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import getQuizzes from './getQuestions/questions'
 
 function createWindow(): void {
   // Create the browser window.
@@ -50,7 +51,15 @@ app.whenReady().then(() => {
   })
 
   // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  ipcMain.handle('get-quizzes', async (_, transcript) => {
+    try {
+      const quizzes = await getQuizzes(transcript) // Ensure getQuizzes function works as expected
+      return quizzes
+    } catch (error) {
+      console.error('Error fetching quizzes:', error)
+      throw new Error('Failed to fetch quizzes')
+    }
+  })
 
   createWindow()
 
