@@ -40,11 +40,13 @@ ipcMain.handle("get-transcription", async (_, videoId: string,start :number) => 
 
 async function getSynonymsAndAntonyms(word: string, env: NodeJS.ProcessEnv): Promise<JSON> {
   const groq = new Groq({ apiKey: env.FACT_API });
-  const prompt = `You are a language expert. Provide synonyms and antonyms for the word "${word}" in the following JSON format:
+  const prompt = `You are a language expert. Provide synonyms, antonyms, and definition for the word "${word}" in the following JSON format:
   {
     "word": "${word}",
+    "definition": "the meaning of the word",
     "synonyms": ["synonym1", "synonym2", ...],
-    "antonyms": ["antonym1", "antonym2", ...]
+    "antonyms": ["antonym1", "antonym2", ...],
+    "usage": "Provide a sentence using the word ${word}."
   }`;
 
   try {

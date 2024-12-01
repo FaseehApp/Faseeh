@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, Typography, TextField, Button, Card, CardContent, Grid, Tooltip, Grid2 } from '@mui/material'
 import { styled } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
@@ -7,11 +7,11 @@ import { motion } from 'framer-motion'
 // Brand colors and theme
 const theme = {
   colors: {
-    primary: '#0ea5e9',
+    primary: '#f97316',
     secondary: '#0284c7',
     text: '#0f172a',
     lightText: '#475569',
-    background: '#f8fafc',
+    background: '#ffffff',
     accent: '#0ea5e9'
   }
 }

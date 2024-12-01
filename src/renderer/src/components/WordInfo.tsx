@@ -3,7 +3,6 @@ import React, { Key } from 'react'
 import { Box, Typography, Divider, Paper } from '@mui/material'
 import { Book } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import getDef from '@renderer/services/getDef'
 import getSynAnt from '@renderer/services/GetSynAnt'
 
 
@@ -13,6 +12,7 @@ const WordInfo: React.FC = () => {
   const [def, setDef] = useState<string>('')
   const [synonyms, setSynonyms] = useState<string[]>([])
   const [opposites, setOpposites] = useState<string[]>([])
+  const [usage, setUsage] = useState<string>('')
   if (!id) {
     return null
   }
@@ -34,17 +34,12 @@ const WordInfo: React.FC = () => {
 
   useEffect(() => {
     if (selectedWord) {
-      getDef(selectedWord)
-        .then((res) => {
-          setDef(selectedWord + ' : ' + res)
-
-        })
-        .catch((err) => {
-          console.error(err)
-        })
+      
       getSynAnt(selectedWord).then((res) => {
         setSynonyms(res.antonyms)
         setOpposites(res.antonyms)
+        setUsage(res.usage)
+        setDef(res.definition)
 })
     }
   }, [selectedWord])
@@ -67,25 +62,37 @@ const WordInfo: React.FC = () => {
         <div className="flex flex-col gap-2">
           <p className="text-xl font-bold">Synonymes</p>
           <div className="flex flex-wrap gap-2">
-            {synonyms.map((synonym: string, key: Key) => {
-              return (
-                <p className="text-md" key={key}>
-                  #{synonym}
-                </p>
-              )
-            })}
+            {synonyms?.length > 0 ? (
+              synonyms.map((synonym: string, key: Key) => {
+                return (
+                  <p className="text-md" key={key}>
+                    #{synonym}
+                  </p>
+                )
+              })
+            ) : (
+              <div>No synonyms available</div>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-2">
           <p className="text-xl font-bold">Opposites</p>
           <div className="flex flex-wrap gap-2">
-            {opposites.map((opposite: string, key: Key) => {
-              return (
-                <p className="text-md" key={key}>
-                  #{opposite}
-                </p>
-              )
-            })}
+            {opposites?.length > 0 ? (
+              opposites.map((opposite: string, key: Key) => {
+                return (
+                  <p className="text-md" key={key}>
+                    #{opposite}
+                  </p>
+                )
+              })
+            ) : (
+              <div>No opposites available</div>
+            )}
+          </div>
+          <div className="flex flex-col gap-2">
+            <p className="text-xl font-bold">Usage</p>
+            <p className="text-md">{usage}</p>
           </div>
         </div>
       </div>
