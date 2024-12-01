@@ -8,11 +8,7 @@ import {
   FactCheckFeedback
 } from '../../../types/types'
 import { SubmitButton } from './styled/StyledComponents'
-import {
-  FactCheckFeedbackEvent,
-  FactCheckRequestEvent,
-  GrammarEvalRequestEvent
-} from '../../../types/events'
+import { FactCheckRequestEvent, GrammarEvalRequestEvent } from '../../../types/events'
 
 interface QuizProps {
   quiz: QuizType
@@ -54,17 +50,17 @@ const Quiz: React.FC<QuizProps> = ({ quiz }) => {
       return updated
     })
 
-    // // Assuming you have a similar API for fact-check feedback
+    // Assuming you have a similar API for fact-check feedback
     const factCheckFeedbackResponse: FactCheckFeedback = await window.api.evalFactCheck(
       new FactCheckRequestEvent(transcript, quiz.questions[index].prompt, inputValues[index])
     )
 
     console.log(factCheckFeedbackResponse)
-    // setFactCheckFeedback((prev) => {
-    //   const updated = [...prev]
-    //   updated[index] = factCheckFeedbackResponse
-    //   return updated
-    // })
+    setFactCheckFeedback((prev) => {
+      const updated = [...prev]
+      updated[index] = factCheckFeedbackResponse
+      return updated
+    })
   }
 
   const handleTabChange = (index: number, event: React.SyntheticEvent, newValue: number) => {

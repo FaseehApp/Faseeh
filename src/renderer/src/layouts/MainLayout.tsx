@@ -2,40 +2,11 @@ import React, { useState } from 'react'
 import { Box, Paper, Typography, Button, styled } from '@mui/material'
 import OptionsSideBar from '../components/OptionsSideBar'
 import WordInfo from '../components/WordInfo'
-import Quiz from '../components/Quiz'
 import VideoPlayer from '@renderer/components/VideoPlayer/VideoPlayer'
 import { LinkType } from '@renderer/types/enums'
 import { Quiz as QuizType, Transcript } from '../../../types/types'
 import { QuizContentEvent } from '../../../types/events'
 import { QuestionComponent } from '@renderer/components/QuestionComponent'
-
-const SubmitButton = styled(Button)({
-  backgroundColor: '#000000',
-  color: '#fff',
-  padding: '8.9px 25px',
-  fontFamily: '"Cambria", serif', // Cambria font family
-  borderRadius: '8px', // Consistent radius with input
-  '&:hover': {
-    backgroundColor: '#333333' // Darker color on hover
-  },
-  marginLeft: '10px', // Space between input and button
-  transition: 'all 0.3s ease' // Smooth transition
-})
-
-const ContainerStyle = {
-  backgroundColor: '#ffffff',
-  color: 'white',
-  padding: '20px',
-  height: '100%',
-  fontFamily: '"Cambria", serif',
-  border: 'none',
-  borderRadius: '12px',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  overflow: 'hidden'
-}
 
 const MainLayout: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)

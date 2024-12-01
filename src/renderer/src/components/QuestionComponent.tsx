@@ -1,20 +1,29 @@
 import { QuestionComponentProp } from '@renderer/types/types'
 import { useState } from 'react'
-import { GrammarEvalErrorEvent } from 'src/types/events'
-import { GrammarFeedback } from 'src/types/types'
+import { FactCheckRequestEvent, GrammarEvalRequestEvent } from '../../../types/events'
+import { FactCheckFeedback, GrammarFeedback, Transcript } from '../../../types/types'
 
 const QuestionComponent: React.FC<QuestionComponentProp> = ({ question }) => {
-  const [evaluation, setEvaluation] = useState<GrammarFeedback>()
+  const [grammarEvaluation, setGrammarEvaluation] = useState<GrammarFeedback>()
   const [userInput, setUserInput] = useState('')
   const [isAnswered, setIsAnswered] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  const videoId = localStorage.getItem('videoId')
+  const json = JSON.parse(localStorage.getItem(`transcription_${videoId}`)!)
+  const transcript = new Transcript(json.text, json.segments)
+
   const handleSubmit = async (): Promise<void> => {
     setIsLoading(true)
     try {
-      console.log(userInput)
-      console.log("----------------")
-      const response: GrammarFeedback = await window.api.evalGrammar(userInput)
-      setEvaluation(response)
+      const grammarFeedbackResponse = await window.api.evalGrammar(
+        new GrammarEvalRequestEvent(userInput)
+      )
+
+      console.log(grammarFeedbackResponse)
+      setGrammarEvaluation(grammarFeedbackResponse)
+      console.log(grammarEvaluation)
+
       setIsAnswered(true)
     } catch (e) {
       console.error(e)
@@ -22,28 +31,25 @@ const QuestionComponent: React.FC<QuestionComponentProp> = ({ question }) => {
       setIsLoading(false)
     }
   }
+
   return (
     <div className="p-5">
       <div className="">
         <p className="text-lg">{question.prompt}</p>
-        {/* <p className="bg-red-50 p-5">{question.skills}</p> */}
-        {/* <p className="bg-red-50 p-5 w-fit">{question.difficulty}</p> */}
         {isAnswered ? (
-          evaluation && (
+          grammarEvaluation && (
             <div>
               <div>
-                <p>userInput</p>
+                <p>Original Text</p>
+                <p>{grammarEvaluation.original_text}</p>
               </div>
               <div>
                 <p>Corrected Text</p>
-                <p>{evaluation.corrected_text}</p>
+                <p>{grammarEvaluation.corrected_text}</p>
               </div>
               <div>
                 <p>Feedback</p>
-                <p>{evaluation.feedback['error']}</p>
-                <p>{evaluation.feedback['type']}</p>
-                <p>{evaluation.feedback['explanation']['problem']}</p>
-                <p>{evaluation.feedback['explanation']['rule']}</p>
+                <p>Error: {grammarEvaluation.feedback.toString()}</p>
               </div>
             </div>
           )
