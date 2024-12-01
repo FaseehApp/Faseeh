@@ -19,7 +19,7 @@ export default async function getQuiz(transcript: Transcript): Promise<Quiz> {
     temperature: 0.2
   })
 
-  const systemMessage = readFileSync(prompt, 'utf8') + `\n\nTranscript: ${transcript.toText()}`
+  const systemMessage = readFileSync(prompt, 'utf8') + `\n\nTranscript: ${transcript.text}`
 
   try {
     const response = await llm.invoke([

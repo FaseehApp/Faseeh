@@ -5,7 +5,7 @@ import icon from '@resources/icon.png?asset'
 import 'dotenv/config'
 import './HandleGroq'
 import './getDefinition'
-import { initQuizListeners } from './Quiz'
+import { initQuizListeners } from './Quiz/initQuizListeners'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({

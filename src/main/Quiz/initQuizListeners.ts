@@ -17,8 +17,7 @@ import { Transcript } from '../../types/types'
 
 export function initQuizListeners(): void {
   // Handle QuizRequestEvent
-  ipcMain.handle(QuizRequestEvent.event, async (event, arg) => {
-    console.log('QuizRequestEvent', arg)
+  ipcMain.handle(QuizRequestEvent.event, async (_event, arg) => {
     const transcript: Transcript = arg
 
     try {
@@ -34,7 +33,7 @@ export function initQuizListeners(): void {
   })
 
   // Handle GrammarEvalRequestEvent
-  ipcMain.handle(GrammarEvalRequestEvent.event, async (event, arg) => {
+  ipcMain.handle(GrammarEvalRequestEvent.event, async (_event, arg) => {
     console.log('GrammarEvalRequestEvent', arg)
     const userResponse: string = arg
 
@@ -55,7 +54,7 @@ export function initQuizListeners(): void {
   })
 
   // Handle FactCheckRequestEvent
-  ipcMain.handle(FactCheckRequestEvent.event, async (event, arg) => {
+  ipcMain.handle(FactCheckRequestEvent.event, async (_event, arg) => {
     console.log('FactCheckRequestEvent', arg)
     const { transcript, question, userResponse } = arg
 

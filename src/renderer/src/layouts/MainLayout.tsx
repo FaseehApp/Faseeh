@@ -5,6 +5,8 @@ import WordInfo from '../components/WordInfo'
 import Quiz from '../components/Quiz'
 import VideoPlayer from '@renderer/components/VideoPlayer/VideoPlayer'
 import { LinkType } from '@renderer/types/enums'
+import { Quiz as QuizType, Transcript } from '../../../types/types'
+import { QuizContentEvent } from '../../../types/events'
 
 const SubmitButton = styled(Button)({
   backgroundColor: '#000000',
@@ -36,12 +38,26 @@ const ContainerStyle = {
 
 const MainLayout: React.FC = () => {
   const [showQuiz, setShowQuiz] = useState(false)
+  // define the quiz state object
+  const [quiz, setQuiz] = useState<QuizType>({ questions: [] })
 
-  const handleGenerateQuiz = () => {
-    setShowQuiz(true)
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }, 100)
+  const handleGenerateQuiz = async () => {
+    const videoId = localStorage.getItem('videoId')
+    const transcriptionData = localStorage.getItem(`transcription_${videoId}`)
+    if (transcriptionData) {
+      const transcriptionJson = JSON.parse(transcriptionData)
+      const transcript: Transcript = new Transcript(
+        transcriptionJson.text,
+        transcriptionJson.segments
+      )
+      const newQuiz: QuizContentEvent = await window.api.generateQuiz(transcript)
+      console.log(newQuiz)
+      // setQuiz(newQuiz)
+      // setShowQuiz(true)
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }, 100)
+    }
   }
 
   return (
@@ -104,7 +120,7 @@ const MainLayout: React.FC = () => {
             Generate Quiz
           </SubmitButton>
         )}
-        {showQuiz && <Quiz />}
+        {showQuiz && <Quiz quiz={quiz} />}
       </Box>
 
       {/* Sidebar (Right) */}

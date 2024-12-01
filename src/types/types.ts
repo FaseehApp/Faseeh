@@ -5,10 +5,12 @@ export interface TranscriptSegment {
 }
 
 export class Transcript {
+  text: string
   segegments: TranscriptSegment[]
 
-  constructor(segegments: TranscriptSegment[]) {
+  constructor(text: string, segegments: TranscriptSegment[]) {
     this.segegments = segegments
+    this.text = text
   }
 
   toText(): string {

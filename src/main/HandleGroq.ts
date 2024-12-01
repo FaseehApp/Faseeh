@@ -24,7 +24,7 @@ async function getTranscriptionGenerator(videoId: string): Promise<Transcription
   return translation
 }
 
-ipcMain.handle('get-transcription', async (event, videoId) => {
+ipcMain.handle('get-transcription', async (_event, videoId) => {
   const transcription = await getTranscriptionGenerator(videoId)
   return transcription
 })

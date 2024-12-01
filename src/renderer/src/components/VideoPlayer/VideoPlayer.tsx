@@ -4,10 +4,6 @@ import StreamVideo from './StreamVideo'
 import Transcription from './Transcription'
 import { VideoPLayerProps } from '@renderer/types/types'
 import type { YouTubePlayer } from 'react-youtube'
-interface StreamVideoProps extends VideoPLayerProps {
-  onPlayerReady: (player: YouTubePlayer) => void
-  onStateChange: (event: { data: number }) => void
-}
 
 const VideoPlayer: React.FC<VideoPLayerProps> = ({ videoStreamlink, linkType }) => {
   const [player, setPlayer] = useState<YouTubePlayer | null>(null)

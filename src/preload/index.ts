@@ -1,18 +1,22 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { GrammarFeedback } from '../types/types'
-import { GrammarEvalRequestEvent } from '../types/events'
+import { GrammarFeedback, Transcript } from '../types/types'
+import { GrammarEvalRequestEvent, QuizRequestEvent, QuizResponseEvent } from '../types/events'
 
 // Custom APIs for renderer
 const api = {
   evalGrammar: async (grammarEvalRequest: GrammarEvalRequestEvent): Promise<GrammarFeedback> => {
     return await ipcRenderer.invoke(GrammarEvalRequestEvent.event, grammarEvalRequest.userResponse)
+  },
+
+  generateQuiz: async (transcript: Transcript): Promise<QuizResponseEvent> => {
+    return await ipcRenderer.invoke(QuizRequestEvent.event, transcript)
   }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   console.log('Preload script loaded')
-})
+}) /*  */
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

@@ -9,6 +9,7 @@ declare global {
     }
     api: {
       evalGrammar: (grammarEvalRequest: GrammarEvalRequestEvent) => Promise<GrammarFeedback>
+      generateQuiz: (transcript: Transcript) => Promise<QuizResponseEvent>
       processData: (payload: string) => Promise<string>
     }
   }
