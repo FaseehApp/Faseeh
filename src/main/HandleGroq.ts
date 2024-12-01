@@ -13,7 +13,7 @@ interface TranscriptionResponse {
 async function getTranscriptionGenerator(videoId: string, env: NodeJS.ProcessEnv , start:number): Promise<TranscriptionResponse> {
 
   const audioFile = await getAudioStream(videoId,start);
-  const groq = new Groq({ apiKey: env.VITE_GROQ_API_KEY });
+  const groq = new Groq({ apiKey: env.FACT_API });
   if (!audioFile) {
     throw new Error("Audio file not found");
   }  
@@ -39,7 +39,7 @@ ipcMain.handle("get-transcription", async (_, videoId: string,start :number) => 
 });
 
 async function getSynonymsAndAntonyms(word: string, env: NodeJS.ProcessEnv): Promise<JSON> {
-  const groq = new Groq({ apiKey: env.VITE_GROQ_API_KEY });
+  const groq = new Groq({ apiKey: env.FACT_API });
   const prompt = `You are a language expert. Provide synonyms and antonyms for the word "${word}" in the following JSON format:
   {
     "word": "${word}",

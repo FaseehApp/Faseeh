@@ -4,15 +4,15 @@ import { Box, Typography, Divider, Paper } from '@mui/material'
 import { Book } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import getDef from '@renderer/services/getDef'
-interface WordInfoProps {
-  synonyms: string[]
-  opposites: string[]
-}
+import getSynAnt from '@renderer/services/GetSynAnt'
 
-const WordInfo: React.FC<WordInfoProps> = ({  synonyms, opposites }) => {
+
+const WordInfo: React.FC = () => {
   const [selectedWord, setSelectedWord] = useState<string>('')
   const [id, setId] = useState<string | null>(localStorage.getItem('videoId'))
   const [def, setDef] = useState<string>('')
+  const [synonyms, setSynonyms] = useState<string[]>([])
+  const [opposites, setOpposites] = useState<string[]>([])
   if (!id) {
     return null
   }
@@ -37,24 +37,29 @@ const WordInfo: React.FC<WordInfoProps> = ({  synonyms, opposites }) => {
       getDef(selectedWord)
         .then((res) => {
           setDef(selectedWord + ' : ' + res)
+
         })
         .catch((err) => {
           console.error(err)
         })
+      getSynAnt(selectedWord).then((res) => {
+        setSynonyms(res.antonyms)
+        setOpposites(res.antonyms)
+})
     }
   }, [selectedWord])
   
 
   return (
-    <div className="w-auto min-h-screen flex flex-col justify-center items-start gap-5 border-l border-zinc-100">
+    <div className="flex flex-col items-start justify-center w-auto min-h-screen gap-5 border-l border-zinc-100">
       <div className="w-full">
-        <p className="text-2xl bg-orange-400 px-5 py-3 text-white font-bold w-full flex items-center gap-2">
+        <p className="flex items-center w-full gap-2 px-5 py-3 text-2xl font-bold text-white bg-orange-400">
           {' '}
           <Book />
           Dictionnary
         </p>
       </div>
-      <div className="pr-8 pl-2 flex flex-col gap-5">
+      <div className="flex flex-col gap-5 pl-2 pr-8">
         <div className="flex flex-col gap-2">
           <p className="text-xl font-bold">Definition</p>
           <p className="text-md">{def}</p>

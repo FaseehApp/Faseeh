@@ -75,7 +75,7 @@ const MainLayout: React.FC = () => {
         <OptionsSideBar />
       </div>
 
-      <div className="flex flex-col items-center justify-center p-5 flex-1 gap-2">
+      <div className="flex flex-col items-center justify-center flex-1 gap-2 p-5">
         <div>
           <VideoPlayer
             linkType={LinkType.YOUTUBE}
@@ -140,8 +140,6 @@ const MainLayout: React.FC = () => {
 
       <div className="flex-2">
         <WordInfo
-          synonyms={['test', 'test2', 'test3']}
-          opposites={['test', 'test2', 'test3']}
         />
       </div>
     </div>
