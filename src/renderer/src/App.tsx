@@ -1,5 +1,6 @@
 import React from 'react'
-import Layout from './layouts/Layout'
+import MainLayout from './layouts/MainLayout'
+import HomeLayout from './layouts/HomeLayout'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import { Box, Typography } from '@mui/material'
@@ -7,7 +8,7 @@ import { Box, Typography } from '@mui/material'
 const App: React.FC = () => {
   return (
     <div>
-      <Layout />
+      <HomeLayout />
     </div>
   )
 }
