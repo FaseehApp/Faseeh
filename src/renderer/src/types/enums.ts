@@ -1,5 +1,4 @@
 export const enum LinkType {
-        YOUTUBE = "YOUTUBE",
-        LOCAL = "LOCAL",    
-    }
-
+  YOUTUBE = 'YOUTUBE',
+  LOCAL = 'LOCAL'
+}

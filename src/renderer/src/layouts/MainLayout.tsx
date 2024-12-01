@@ -78,8 +78,10 @@ const MainLayout: React.FC = () => {
           Let&apos;s turn you into a Faseeh
         </Typography>
 
-        <VideoPlayer linkType={LinkType.YOUTUBE} videoStreamlink="n4e5UPu1co0"></VideoPlayer>
-
+        <VideoPlayer
+          linkType={LinkType.YOUTUBE}
+          videoStreamlink={localStorage.getItem('videoId') || ''}
+        ></VideoPlayer>
         {/* Conditionally render the button or quiz */}
         {!showQuiz && (
           <SubmitButton
@@ -102,7 +104,6 @@ const MainLayout: React.FC = () => {
             Generate Quiz
           </SubmitButton>
         )}
-
         {showQuiz && <Quiz />}
       </Box>
 
