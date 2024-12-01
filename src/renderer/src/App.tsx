@@ -1,39 +1,16 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
-import { GrammarEvalRequestEvent } from '../../types/events'
+import React from 'react'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import MainLayout from './layouts/MainLayout'
+import HomeLayout from './layouts/HomeLayout'
 
-function App(): JSX.Element {
-  const getGrammarFeedback = async (): Promise<void> => {
-    const payload = new GrammarEvalRequestEvent("I doesn't know anyting")
-    const response = await window.api.evalGrammar(payload)
-    console.log('Response from main process:', response)
-  }
-
+const App: React.FC = () => {
   return (
-    <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={getGrammarFeedback}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomeLayout />} />
+        <Route path="/main-layout" element={<MainLayout />} />
+      </Routes>
+    </Router>
   )
 }
 
