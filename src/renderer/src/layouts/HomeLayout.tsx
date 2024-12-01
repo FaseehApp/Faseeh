@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Typography, TextField, Button, Card, CardContent, Grid } from '@mui/material'
 import { styled } from '@mui/system'
+import { useNavigate } from 'react-router-dom'
 
 const Root = styled(Box)({
   backgroundColor: '#ffffff',
@@ -107,6 +108,12 @@ const CardContentText = styled(Typography)({
 })
 
 const HomePage: React.FC = () => {
+  const navigate = useNavigate()
+
+  const handleStartNowClick = () => {
+    // Navigate to MainLayout
+    navigate('/main-layout')
+  }
   return (
     <Root>
       {/* Hero Section */}
@@ -181,7 +188,9 @@ const HomePage: React.FC = () => {
       </Grid>
       {/* Optional Call-to-Action */}
       <Box mt={4}>
-        <SubmitButton variant="contained">Get Started Now</SubmitButton>
+        <SubmitButton variant="contained" onClick={handleStartNowClick}>
+          Get Started Now
+        </SubmitButton>
       </Box>
     </Root>
   )

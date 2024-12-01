@@ -3,8 +3,15 @@ import React from 'react'
 import { Box, IconButton } from '@mui/material'
 import HomeIcon from '@mui/icons-material/Home'
 import SettingsIcon from '@mui/icons-material/Settings'
+import { useNavigate } from 'react-router-dom'
 
 const OptionsSideBar: React.FC = () => {
+  const navigate = useNavigate()
+
+  const handleStartNowClick = () => {
+    // Navigate to MainLayout
+    navigate('/')
+  }
   return (
     <Box
       sx={{
@@ -37,7 +44,7 @@ const OptionsSideBar: React.FC = () => {
           }
         }}
       >
-        <HomeIcon sx={{ color: 'white', fontSize: '30px' }} />
+        <HomeIcon sx={{ color: 'white', fontSize: '30px' }} onClick={handleStartNowClick} />
       </IconButton>
 
       {/* Settings Button */}

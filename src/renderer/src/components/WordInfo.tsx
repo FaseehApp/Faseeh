@@ -12,8 +12,8 @@ const WordInfo: React.FC<WordInfoProps> = ({ definition, synonyms, opposites }) 
   return (
     <Box
       sx={{
-        width: '240px', // Take full width of the parent container
-        height: '90vh',
+        width: '190px', // Take full width of the parent container
+        height: '87.5vh',
         backgroundColor: '#2c2c2c', // Same color as the left sidebar
         padding: '20px',
         borderRadius: '10px',
@@ -27,13 +27,16 @@ const WordInfo: React.FC<WordInfoProps> = ({ definition, synonyms, opposites }) 
         gap: '20px' // Add some gap between sections for better spacing
       }}
     >
-      <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#f29f67' }}>
-        Word Definition & Info
+      <Typography
+        variant="h6"
+        sx={{ fontWeight: 'bold', fontFamily: '"Cambria", serif', color: '#f29f67' }}
+      >
+        {'Word'} Info
       </Typography>
       <Divider sx={{ my: 2, borderColor: '#f29f67' }} /> {/* Gold divider line */}
       {/* Definition Section */}
       <Box sx={{ width: '100%' }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontFamily: '"Cambria", serif' }}>
           Definition:
         </Typography>
         <Typography variant="body2">
@@ -43,7 +46,7 @@ const WordInfo: React.FC<WordInfoProps> = ({ definition, synonyms, opposites }) 
       <Divider sx={{ my: 2, borderColor: '#f29f67' }} /> {/* Gold divider line */}
       {/* Synonyms Section */}
       <Box sx={{ width: '100%' }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontFamily: '"Cambria", serif' }}>
           Synonyms:
         </Typography>
         <Typography variant="body2">
@@ -53,7 +56,7 @@ const WordInfo: React.FC<WordInfoProps> = ({ definition, synonyms, opposites }) 
       <Divider sx={{ my: 2, borderColor: '#f29f67' }} /> {/* Gold divider line */}
       {/* Opposites Section */}
       <Box sx={{ width: '100%' }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', fontFamily: '"Cambria", serif' }}>
           Opposites:
         </Typography>
         <Typography variant="body2">

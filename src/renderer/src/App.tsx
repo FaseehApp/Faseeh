@@ -1,4 +1,5 @@
 import React from 'react'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import MainLayout from './layouts/MainLayout'
 import HomeLayout from './layouts/HomeLayout'
 import Button from '@mui/material/Button'
@@ -7,9 +8,12 @@ import { Box, Typography } from '@mui/material'
 
 const App: React.FC = () => {
   return (
-    <div>
-      <HomeLayout />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomeLayout />} />
+        <Route path="/main-layout" element={<MainLayout />} />
+      </Routes>
+    </Router>
   )
 }
 
