@@ -2,21 +2,21 @@ import { ipcMain } from "electron";
 import fs from "fs";
 import Groq from "groq-sdk";
 import dotenv from "dotenv";
-import DownloadVideo from "./youtubeDownloader";
+import getAudioStream from "./getAudioStream";
+import { s } from "vite/dist/node/types.d-aGj9QkWt";
 dotenv.config(); 
 
 interface TranscriptionResponse {
   text: string;
 }
 
-async function getTranscriptionGenerator(videoId: string, env: NodeJS.ProcessEnv): Promise<TranscriptionResponse> {
-  const stream = await DownloadVideo(videoId);
+async function getTranscriptionGenerator(videoId: string, env: NodeJS.ProcessEnv , start:number): Promise<TranscriptionResponse> {
 
-  const response = new Response(stream);
-  const audio = await response.arrayBuffer();
-  const audioFile = new File([audio], 'audio.mp4', { type: 'audio/mp4' });
+  const audioFile = await getAudioStream(videoId,start);
   const groq = new Groq({ apiKey: env.VITE_GROQ_API_KEY });
-
+  if (!audioFile) {
+    throw new Error("Audio file not found");
+  }  
   try {
     const translation = await groq.audio.transcriptions.create({
       file: audioFile,
@@ -29,9 +29,9 @@ async function getTranscriptionGenerator(videoId: string, env: NodeJS.ProcessEnv
   }
 }
 
-ipcMain.handle("get-transcription", async (_, videoId: string) => {
+ipcMain.handle("get-transcription", async (_, videoId: string,start :number) => {
   try {
-    const transcription = await getTranscriptionGenerator(videoId, process.env );
+    const transcription = await getTranscriptionGenerator(videoId, process.env,start );
     return transcription;
   } catch (error) {
     throw error;

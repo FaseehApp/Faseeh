@@ -5,6 +5,8 @@ import icon from '../../resources/icon.png?asset'
 import 'dotenv/config';
 import './HandleGroq';
 import './getDefinition';
+import './getAudioStream';
+import "./ffmpeg";
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
