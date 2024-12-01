@@ -2,9 +2,10 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '@resources/icon.png?asset'
+import 'dotenv/config'
+import './HandleGroq'
+import './getDefinition'
 import { initQuizListeners } from './Quiz'
-import { PluginManager } from './core/PluginManager'
-
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -63,9 +64,6 @@ app.whenReady().then(() => {
   // })
 
   initQuizListeners()
-
-  const pluginManager = new PluginManager()
-  pluginManager.loadAll()
 
   createWindow()
 
