@@ -110,7 +110,10 @@ const VideoPlayer: React.FC<VideoPLayerProps> = ({ videoStreamlink, linkType }) 
   }
 
   return (
-    <div ref={containerRef} className="relative container w-[600px] h-[400px] bg-black group">
+    <div
+      ref={containerRef}
+      className="relative container w-[600px] h-[400px] bg-black group rouneded-md border-2 border-orange-500 lg:w-[900px] lg:h-[600px] xl:w-[1200px] xl:h-[800px]"
+    >
       {isLoading ? (
         <IsLoading />
       ) : (
