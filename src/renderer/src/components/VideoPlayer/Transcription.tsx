@@ -1,7 +1,8 @@
-import { useTranscription } from '@renderer/hooks/useTranscription'
-import getTranscription from '@renderer/services/GetTranscription'
-import { useEffect, useState } from 'react'
-import getDef from '@renderer/services/getDef'
+import { useTranscription } from "@renderer/hooks/useTranscription";
+import getTranscription from "@renderer/services/GetTranscription";
+import { useEffect, useState } from "react";
+import getDef from "@renderer/services/getDef";
+import getSynAnt from "@renderer/services/GetSynAnt";
 interface TranscriptionProps {
   currentTime: number
   id: string

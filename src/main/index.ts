@@ -6,6 +6,8 @@ import 'dotenv/config'
 import './HandleGroq'
 import './getDefinition'
 import { initQuizListeners } from './Quiz/initQuizListeners'
+import './getAudioStream';
+import "./ffmpeg";
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
