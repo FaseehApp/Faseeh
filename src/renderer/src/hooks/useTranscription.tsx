@@ -12,7 +12,7 @@ function useTranscription(currentTime: number, transcriptionJSON: any): string {
     useEffect(() => {
       if (transcriptionJSON) {
         try {
-          const segments = transcriptionJSON.data.segments || [];
+          const segments = transcriptionJSON.segments || [];
           setTranscriptionData(segments);
         } catch (error) {
           console.error('Error parsing transcription:', error);
