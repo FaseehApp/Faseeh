@@ -7,6 +7,7 @@ import VideoPlayer from '@renderer/components/VideoPlayer/VideoPlayer'
 import { LinkType } from '@renderer/types/enums'
 import { Quiz as QuizType, Transcript } from '../../../types/types'
 import { QuizContentEvent } from '../../../types/events'
+import { QuestionComponent } from '@renderer/components/QuestionComponent'
 
 const SubmitButton = styled(Button)({
   backgroundColor: '#000000',
@@ -37,98 +38,114 @@ const ContainerStyle = {
 }
 
 const MainLayout: React.FC = () => {
-  const [showQuiz, setShowQuiz] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState('')
   // define the quiz state object
   const [quiz, setQuiz] = useState<QuizType>({ questions: [] })
 
-  const handleGenerateQuiz = async () => {
-    const videoId = localStorage.getItem('videoId')
-    const transcriptionData = localStorage.getItem(`transcription_${videoId}`)
-    if (transcriptionData) {
-      const transcriptionJson = JSON.parse(transcriptionData)
-      const transcript: Transcript = new Transcript(
-        transcriptionJson.text,
-        transcriptionJson.segments
-      )
-      const newQuiz: QuizContentEvent = await window.api.generateQuiz(transcript)
-      setQuiz(newQuiz)
-      setShowQuiz(true)
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-      }, 100)
+  const handleGenerateQuiz = async (): Promise<void> => {
+    setIsLoading(true)
+    try {
+      const videoId = localStorage.getItem('videoId')
+      const transcriptionData = localStorage.getItem(`transcription_${videoId}`)
+      if (transcriptionData) {
+        const transcriptionJson = JSON.parse(transcriptionData)
+        const transcript: Transcript = new Transcript(
+          transcriptionJson.text,
+          transcriptionJson.segments
+        )
+        const newQuiz: QuizContentEvent = await window.api.generateQuiz(transcript)
+        console.log(newQuiz)
+        setQuiz(newQuiz)
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
+      }
+    } catch (e) {
+      if (e instanceof Error) setIsError(e.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <Box sx={{ display: 'flex', height: '100vh', padding: '0', gap: '20px' }}>
+    <div className="flex ">
       {/* Sidebar (Left) */}
-      <Box sx={{ width: '20%', height: '100vh', overflow: 'hidden' }}>
-        <Paper elevation={3} sx={ContainerStyle}>
-          <OptionsSideBar />
-        </Paper>
-      </Box>
+      <div className="flex-3">
+        <OptionsSideBar />
+      </div>
 
-      {/* Center Section */}
-      <Box
-        sx={{
-          width: '60%',
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          overflowY: 'auto'
-        }}
-      >
-        <Typography
-          variant="h3"
-          sx={{
-            color: '#000000',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            fontFamily: '"Cambria", serif',
-            marginBottom: '20px'
-          }}
-        >
-          Let&apos;s turn you into a Faseeh
-        </Typography>
-
-        <VideoPlayer
-          linkType={LinkType.YOUTUBE}
-          videoStreamlink={localStorage.getItem('videoId') || ''}
-        ></VideoPlayer>
-        {/* Conditionally render the button or quiz */}
-        {!showQuiz && (
-          <SubmitButton
-            variant="contained"
-            sx={{
-              marginTop: '20px',
-              backgroundColor: '#000000',
-              color: 'white',
-              fontSize: '20px',
-              padding: '10px 30px',
-              borderRadius: '8px',
-              fontWeight: 'bold',
-              textTransform: 'none',
-              '&:hover': {
-                backgroundColor: '#00000'
-              }
-            }}
-            onClick={handleGenerateQuiz}
-          >
-            Generate Quiz
-          </SubmitButton>
+      <div className="flex flex-col items-center justify-center p-5 flex-1 gap-2">
+        <div>
+          <VideoPlayer
+            linkType={LinkType.YOUTUBE}
+            videoStreamlink={localStorage.getItem('videoId') || ''}
+          ></VideoPlayer>
+        </div>
+        {quiz.questions.length != 0 ? (
+          <div>
+            <p className="text-3xl text-orange-500">Quizzes</p>
+            <div>
+              {quiz.questions.map((question, key) => {
+                return <QuestionComponent question={question} key={key} />
+              })}
+            </div>
+          </div>
+        ) : (
+          <div className="">
+            <button
+              className={`px-5 py-3 bg-orange-400 rounded-md ${isLoading ? 'disabled:bg-gray-300' : ''}`}
+              disabled={isLoading}
+              onClick={handleGenerateQuiz}
+            >
+              {!isLoading ? (
+                'Generate Quiz'
+              ) : (
+                <span className="loading loading-dots loading-md"></span>
+              )}
+            </button>
+          </div>
         )}
-        {showQuiz && <Quiz quiz={quiz} />}
-      </Box>
+      </div>
+      {/* Conditionally render the button or quiz */}
+      {/* {!showQuiz && (
+        <SubmitButton
+          variant="contained"
+          sx={{
+            marginTop: '20px',
+            backgroundColor: '#000000',
+            color: 'white',
+            fontSize: '20px',
+            padding: '10px 30px',
+            borderRadius: '8px',
+            fontWeight: 'bold',
+            textTransform: 'none',
+            '&:hover': {
+              backgroundColor: '#00000'
+            }
+          }}
+          onClick={handleGenerateQuiz}
+        >
+          Generate Quiz
+        </SubmitButton>
+      )}
+      {showQuiz && <Quiz quiz={quiz} />} */}
 
       {/* Sidebar (Right) */}
-      <Box sx={{ width: '20%', height: '100vh', overflow: 'hidden' }}>
+      {/* <Box sx={{ width: '20%', height: '100vh', overflow: 'hidden' }}>
         <Paper elevation={3} sx={ContainerStyle}>
           <WordInfo definition="Placeholder" synonyms={['Example']} opposites={['Contrary']} />
         </Paper>
-      </Box>
-    </Box>
+      </Box> */}
+
+      <div className="flex-2">
+        <WordInfo
+          definition="Test defintion"
+          synonyms={['test', 'test2', 'test3']}
+          opposites={['test', 'test2', 'test3']}
+        />
+      </div>
+    </div>
   )
 }
 
