@@ -2,6 +2,7 @@ import { useTranscription } from "@renderer/hooks/useTranscription";
 import getTranscription from "@renderer/services/GetTranscription";
 import { useEffect, useState } from "react";
 import getDef from "@renderer/services/getDef";
+import getSynAnt from "@renderer/services/GetSynAnt";
 interface TranscriptionProps {
     currentTime: number;
     id: string;
@@ -10,7 +11,20 @@ interface TranscriptionProps {
 const Transcription: React.FC<TranscriptionProps> = ({ currentTime, id }) => {
     const [transcriptionJSON, setTranscriptionJSON] = useState<JSON>();
     const [selectedWord, setSelectedWord] = useState<string>("");
+    const [def, setDef] = useState<string>("");
+    const [synAnt, setSynAnt] = useState<JSON>();
 
+
+    useEffect(() => {
+        if (selectedWord) {
+            getDef(selectedWord).then((res) => {
+                setDef(res.definition);
+            });}
+            getSynAnt(selectedWord).then((res) => {
+                setSynAnt(res);
+            });
+            
+    }, [selectedWord]);
 
     if (!id) {
         return null;
@@ -24,6 +38,8 @@ const Transcription: React.FC<TranscriptionProps> = ({ currentTime, id }) => {
         }
     };
     useEffect(() => {
+        setDef("");
+        console.log(def);
         document.addEventListener("selectionchange", handleSelectionChange);
 
         return () => {
@@ -31,20 +47,19 @@ const Transcription: React.FC<TranscriptionProps> = ({ currentTime, id }) => {
         };
     }, []);
 
-
-
     useEffect(() => {
-        if (selectedWord) {
-            getDef(selectedWord);}
+        console.log(def);
+        console.log(synAnt);
+    }, [def]);
+    
 
-    }, [selectedWord]);
     useEffect(() => {
         const storedTranscription = localStorage.getItem(`transcription_${id}`);
         if (storedTranscription) {
             setTranscriptionJSON(JSON.parse(storedTranscription));
         } else {
             setTranscriptionJSON(undefined);
-            getTranscription(id).then((res) => {
+            getTranscription(id,0).then((res) => {
                 setTranscriptionJSON(res);
                 localStorage.setItem(`transcription_${id}`, JSON.stringify(res));
             });
@@ -52,11 +67,14 @@ const Transcription: React.FC<TranscriptionProps> = ({ currentTime, id }) => {
     }, [id]);
     const transcription = useTranscription(currentTime, transcriptionJSON);
     return (
+        <>
         <div className="absolute transform -translate-x-1/2 bottom-20 left-1/2">
             <div className="px-4 py-2 text-lg text-white bg-black rounded bg-opacity-70">
-                <p className="text-center select-text " >{transcription}</p>
+                <p className="text-center select-text">{transcription}</p>
             </div>
+            
         </div>
+        </>
     );
 
 };
