@@ -1,8 +1,14 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { GrammarFeedback } from '../types/types'
+import { GrammarEvalRequestEvent } from '../types/events'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  evalGrammar: async (grammarEvalRequest: GrammarEvalRequestEvent): Promise<GrammarFeedback> => {
+    return await ipcRenderer.invoke(GrammarEvalRequestEvent.event, grammarEvalRequest.userResponse)
+  }
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

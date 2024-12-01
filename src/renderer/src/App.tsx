@@ -1,8 +1,13 @@
 import Versions from './components/Versions'
 import electronLogo from './assets/electron.svg'
+import { GrammarEvalRequestEvent } from '../../types/events'
 
 function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  const getGrammarFeedback = async (): Promise<void> => {
+    const payload = new GrammarEvalRequestEvent("I doesn't know anyting")
+    const response = await window.api.evalGrammar(payload)
+    console.log('Response from main process:', response)
+  }
 
   return (
     <>
@@ -22,7 +27,7 @@ function App(): JSX.Element {
           </a>
         </div>
         <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
+          <a target="_blank" rel="noreferrer" onClick={getGrammarFeedback}>
             Send IPC
           </a>
         </div>

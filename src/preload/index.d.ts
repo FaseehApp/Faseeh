@@ -1,4 +1,5 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
+import { GrammarFeedback } from 'src/types/types'
 
 declare global {
   interface Window {
@@ -6,6 +7,9 @@ declare global {
     electronAPI: {
       getQuizzes: (transcript: string) => Promise<Quizzes>
     }
-    api: unknown
+    api: {
+      evalGrammar: (grammarEvalRequest: GrammarEvalRequestEvent) => Promise<GrammarFeedback>
+      processData: (payload: string) => Promise<string>
+    }
   }
 }

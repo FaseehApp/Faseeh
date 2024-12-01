@@ -1,9 +1,8 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
-import getQuizzes from './getQuestions/questions'
-import evalGrammar from './grammar_error_correction'
+import icon from '@resources/icon.png?asset'
+import { initQuizListeners } from './Quiz'
 
 function createWindow(): void {
   // Create the browser window.
@@ -51,20 +50,29 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.handle('get-quizzes', async (_, transcript) => {
-    try {
-      const quizzes = await getQuizzes(transcript) // Ensure getQuizzes function works as expected
-      return quizzes
-    } catch (error) {
-      console.error('Error fetching quizzes:', error)
-      throw new Error('Failed to fetch quizzes')
-    }
-  })
+  // // IPC test
+  // ipcMain.handle('get-quizzes', async (_, transcript) => {
+  //   try {
+  //     const quizzes = await getQuizzes(transcript) // Ensure getQuizzes function works as expected
+  //     return quizzes
+  //   } catch (error) {
+  //     console.error('Error fetching quizzes:', error)
+  //     throw new Error('Failed to fetch quizzes')
+  //   }
+  // })
+
+  initQuizListeners()
 
   createWindow()
-  evalGrammar('I does not know what you are talking about.').then((correction) => {
-    console.log(correction)
+
+  ipcMain.handle('process-data', async (event, payload) => {
+    console.log('Received payload from renderer:', payload)
+
+    // Process the payload (simple example: append "-processed")
+    const result = `${payload}-processed`
+
+    // Return the result to the renderer
+    return result
   })
 
   app.on('activate', function () {
