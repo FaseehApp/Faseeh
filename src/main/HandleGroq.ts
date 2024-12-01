@@ -2,26 +2,41 @@ import { ipcMain } from "electron";
 import fs from "fs";
 import Groq from "groq-sdk";
 import dotenv from "dotenv";
+import DownloadVideo from "./youtubeDownloader";
 
-dotenv.config(); // Ensure .env is loaded in the main process
+dotenv.config(); 
 
-const GROQ_API_KEY = process.env.VITE_GROQ_API_KEY;
+interface TranscriptionResponse {
+  text: string;
+}
 
-const groq = new Groq({ apiKey: GROQ_API_KEY });
+async function getTranscriptionGenerator(videoId: string, env: any): Promise<TranscriptionResponse> {
+  const stream = await DownloadVideo(videoId);
 
-ipcMain.handle("get-transcription", async (event, audioStreamPath) => {
-    try {
-        const translation = await groq.audio.translations.create({
-            file: fs.createReadStream(audioStreamPath),
-            model: "whisper-large-v3",
-            response_format: "verbose_json",
-            temperature: 0.0,
-        });
-        return translation;
-    } catch (error) {
-        throw error;
-    }
+  const response = new Response(stream);
+  const audio = await response.arrayBuffer();
+  const audioFile = new File([audio], 'audio.mp4', { type: 'audio/mp4' });
+  const groq = new Groq({ apiKey: env.VITE_GROQ_API_KEY });
+
+  try {
+    const translation = await groq.audio.transcriptions.create({
+      file: audioFile,
+      model: "whisper-large-v3",
+      response_format: "verbose_json",
+    });
+    return translation;
+  } catch (error) {
+    throw error;
+  }
+}
+
+ipcMain.handle("get-transcription", async (event, videoId) => {
+  try {
+    const transcription = await getTranscriptionGenerator(videoId, process.env);
+    return transcription;
+  } catch (error) {
+    throw error;
+  }
 });
 
-
-export default {};
+export default getTranscriptionGenerator;
