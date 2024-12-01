@@ -1,10 +1,16 @@
 import { QuestionComponentProp } from '@renderer/types/types'
-import { useState } from 'react'
-import { FactCheckRequestEvent, GrammarEvalRequestEvent } from '../../../types/events'
-import { FactCheckFeedback, GrammarFeedback, Transcript } from '../../../types/types'
+import { useEffect, useState } from 'react'
+import {
+  FactCheckRequestEvent,
+  FactCheckResponseEvent,
+  GrammarEvalRequestEvent,
+  GrammarEvalResponseEvent
+} from '../../../types/events'
+import { Transcript } from '../../../types/types'
 
 const QuestionComponent: React.FC<QuestionComponentProp> = ({ question }) => {
-  const [grammarEvaluation, setGrammarEvaluation] = useState<GrammarFeedback>()
+  const [grammarEvaluation, setGrammarEvaluation] = useState<GrammarEvalResponseEvent>()
+  const [factCheckEvaluation, setFactCheckEvaluation] = useState<FactCheckResponseEvent>()
   const [userInput, setUserInput] = useState('')
   const [isAnswered, setIsAnswered] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -19,18 +25,29 @@ const QuestionComponent: React.FC<QuestionComponentProp> = ({ question }) => {
       const grammarFeedbackResponse = await window.api.evalGrammar(
         new GrammarEvalRequestEvent(userInput)
       )
+      console.log(userInput)
 
-      console.log(grammarFeedbackResponse)
+      console.log('grammar feedback ', grammarFeedbackResponse)
       setGrammarEvaluation(grammarFeedbackResponse)
-      console.log(grammarEvaluation)
+
+      const factCheckFeedbackResponse = await window.api.evalFactCheck(
+        new FactCheckRequestEvent(transcript, question.prompt, userInput)
+      )
+      console.log('fact check feedback ', factCheckFeedbackResponse)
+      setFactCheckEvaluation(factCheckFeedbackResponse)
 
       setIsAnswered(true)
     } catch (e) {
       console.error(e)
+      alert('An error occurred while evaluating grammar.')
     } finally {
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    console.log('Updated grammar eval', grammarEvaluation)
+  }, [grammarEvaluation])
 
   return (
     <div className="p-5">
@@ -38,25 +55,77 @@ const QuestionComponent: React.FC<QuestionComponentProp> = ({ question }) => {
         <p className="text-lg">{question.prompt}</p>
         {isAnswered ? (
           grammarEvaluation && (
-            <div>
-              <div>
-                <p>Original Text</p>
-                <p>{grammarEvaluation.original_text}</p>
+            <div className="space-y-4">
+              <div className="p-3 rounded">
+                <p className="font-semibold">Original Text:</p>
+                <p>{grammarEvaluation.feedback.original_text}</p>
               </div>
-              <div>
-                <p>Corrected Text</p>
-                <p>{grammarEvaluation.corrected_text}</p>
+              <div className="p-3 rounded ">
+                <p className="font-semibold">Corrected Text:</p>
+                <p>{grammarEvaluation.feedback.corrected_text}</p>
               </div>
-              <div>
-                <p>Feedback</p>
-                <p>Error: {grammarEvaluation.feedback.toString()}</p>
+              <div className="p-3 rounded">
+                <p className="font-semibold">Feedback:</p>
+                {Array.isArray(grammarEvaluation.feedback.feedback) ? (
+                  grammarEvaluation.feedback.feedback.length > 0 ? (
+                    grammarEvaluation.feedback.feedback.map((item, index) => (
+                      <div key={index} className="mt-2">
+                        <p>Type: {item.type}</p>
+                        <p>Error: {item.error}</p>
+                        {item.explanation && (
+                          <>
+                            <p>Rule: {JSON.stringify(item.explanation.rule)}</p>
+                            <p>Problem: {JSON.stringify(item.explanation.problem)}</p>
+                          </>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="mt-2">
+                      <p className="text-green-600">No grammar errors found!</p>
+                    </div>
+                  )
+                ) : (
+                  <div className="mt-2">
+                    <p className="text-red-600">Invalid feedback format received</p>
+                    <pre className="p-2 mt-1 text-sm text-gray-600 rounded">
+                      {JSON.stringify(grammarEvaluation.feedback, null, 2)}
+                    </pre>
+                  </div>
+                )}
+              </div>
+              <div className="space-y-4">
+                <div className="p-3 rounded">
+                  <p className="font-semibold">Fact Check Feedback:</p>
+                  {factCheckEvaluation?.feedback ? (
+                    <div>
+                      <p
+                        className={`text-${factCheckEvaluation.feedback.grade === 'correct' ? 'green' : factCheckEvaluation.feedback.grade === 'partially correct' ? 'yellow' : 'red'}-600`}
+                      >
+                        The answer is {factCheckEvaluation.feedback.grade.replace('_', ' ')}!
+                      </p>
+                      {factCheckEvaluation.feedback.feedback.map((item, index) => (
+                        <div key={index} className="mt-2">
+                          <p>Missed Part: {item.missed_part}</p>
+                          <p>Correct Information: {item.correct_info}</p>
+                          <p>
+                            Timestamp: {new Date(item.timestamp * 1000).toISOString().substr(11, 8)}
+                          </p>
+                          <p>Explanation: {item.explanation}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-red-600">No fact check feedback available.</p>
+                  )}
+                </div>
               </div>
             </div>
           )
         ) : (
           <div>
             <input
-              className="py-2 px-1 my-2 w-full border rounded border-zinc-200"
+              className="w-full px-1 py-2 my-2 border rounded border-zinc-200"
               type="text"
               value={userInput}
               onChange={(e) => {
