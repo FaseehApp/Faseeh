@@ -9,32 +9,6 @@ interface TranscriptionProps {
 
 const Transcription: React.FC<TranscriptionProps> = ({ currentTime, id }) => {
   const [transcriptionJSON, setTranscriptionJSON] = useState<JSON>()
-  const [selectedWord, setSelectedWord] = useState<string>('')
-
-  if (!id) {
-    return null
-  }
-
-  const handleSelectionChange = () => {
-    const selection = window.getSelection()
-    if (selection && selection.rangeCount > 0) {
-      const selectedText = selection.toString().split(' ')[0]
-      setSelectedWord(selectedText)
-    }
-  }
-  useEffect(() => {
-    document.addEventListener('selectionchange', handleSelectionChange)
-
-    return () => {
-      document.removeEventListener('selectionchange', handleSelectionChange)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (selectedWord) {
-      getDef(selectedWord)
-    }
-  }, [selectedWord])
   useEffect(() => {
     const storedTranscription = localStorage.getItem(`transcription_${id}`)
     if (storedTranscription) {

@@ -140,7 +140,6 @@ const MainLayout: React.FC = () => {
 
       <div className="flex-2">
         <WordInfo
-          definition="Test defintion"
           synonyms={['test', 'test2', 'test3']}
           opposites={['test', 'test2', 'test3']}
         />
