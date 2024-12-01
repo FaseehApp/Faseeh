@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { Box, Paper, Typography, Button, styled } from '@mui/material'
 import OptionsSideBar from '../components/OptionsSideBar'
 import WordInfo from '../components/WordInfo'
-import MediaPlayer from '../components/MediaPlayer'
 import Quiz from '../components/Quiz'
+import VideoPlayer from '@renderer/components/VideoPlayer/VideoPlayer'
+import { LinkType } from '@renderer/types/enums'
 
 const SubmitButton = styled(Button)({
   backgroundColor: '#000000',
@@ -74,10 +75,10 @@ const MainLayout: React.FC = () => {
             marginBottom: '20px'
           }}
         >
-          Let's turn you into a Faseeh
+          Let&apos;s turn you into a Faseeh
         </Typography>
 
-        <MediaPlayer src={'www.youtube.com'} />
+        <VideoPlayer linkType={LinkType.YOUTUBE} videoStreamlink="n4e5UPu1co0"></VideoPlayer>
 
         {/* Conditionally render the button or quiz */}
         {!showQuiz && (

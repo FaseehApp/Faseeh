@@ -1,30 +1,25 @@
-import { ipcMain } from "electron";
+import { ipcMain } from 'electron'
 
+const wd = require('word-definition')
 
-
-const wd = require("word-definition");
-
-
-
-const getDefinition = async (event, word) : Promise<string> => {
-    try {
-        const definition = await new Promise<string>((resolve, reject) => {
-            wd.getDef(word, "en", null, (definition) => {
-                if (definition) {
-                    resolve(definition);
-                } else {
-                    reject(new Error("Definition not found"));
-                }
-            });
-        });
-        return definition;
-    } catch (error) {
-        console.error("Failed to get definition:", error);
-        throw error;
-    }
+const getDefinition = async (event, word): Promise<string> => {
+  try {
+    const definition = await new Promise<string>((resolve, reject) => {
+      wd.getDef(word, 'en', null, (definition) => {
+        if (definition) {
+          resolve(definition)
+        } else {
+          reject(new Error('Definition not found'))
+        }
+      })
+    })
+    return definition
+  } catch (error) {
+    console.error('Failed to get definition:', error)
+    throw error
+  }
 }
 
-ipcMain.handle("get-definition", getDefinition);
+ipcMain.handle('get-definition', getDefinition)
 
-
-export default {};
+export default {}
