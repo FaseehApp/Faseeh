@@ -4,7 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import 'dotenv/config';
 import './HandleGroq';
-
+import './getDefinition';
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
