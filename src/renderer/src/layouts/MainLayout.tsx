@@ -51,7 +51,6 @@ const MainLayout: React.FC = () => {
         transcriptionJson.segments
       )
       const newQuiz: QuizContentEvent = await window.api.generateQuiz(transcript)
-      console.log(newQuiz)
       setQuiz(newQuiz)
       setShowQuiz(true)
       setTimeout(() => {

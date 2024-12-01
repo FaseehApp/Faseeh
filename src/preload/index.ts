@@ -1,7 +1,12 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
-import { GrammarFeedback, Transcript } from '../types/types'
-import { GrammarEvalRequestEvent, QuizRequestEvent, QuizResponseEvent } from '../types/events'
+import { FactCheckFeedback, GrammarFeedback, Transcript } from '../types/types'
+import {
+  FactCheckRequestEvent,
+  GrammarEvalRequestEvent,
+  QuizRequestEvent,
+  QuizResponseEvent
+} from '../types/events'
 
 // Custom APIs for renderer
 const api = {
@@ -11,6 +16,10 @@ const api = {
 
   generateQuiz: async (transcript: Transcript): Promise<QuizResponseEvent> => {
     return await ipcRenderer.invoke(QuizRequestEvent.event, transcript)
+  },
+
+  evalFactCheck: async (factCheckRequest: FactCheckRequestEvent): Promise<FactCheckFeedback> => {
+    return await ipcRenderer.invoke(FactCheckRequestEvent.event, factCheckRequest)
   }
 }
 

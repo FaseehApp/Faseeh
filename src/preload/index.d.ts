@@ -1,5 +1,6 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import { GrammarFeedback } from 'src/types/types'
+import { FactCheckRequestEvent } from 'src/types/events'
+import { FactCheckFeedback, GrammarFeedback } from 'src/types/types'
 
 declare global {
   interface Window {
@@ -10,7 +11,7 @@ declare global {
     api: {
       evalGrammar: (grammarEvalRequest: GrammarEvalRequestEvent) => Promise<GrammarFeedback>
       generateQuiz: (transcript: Transcript) => Promise<QuizResponseEvent>
-      processData: (payload: string) => Promise<string>
+      evalFactCheck: (factCheckRequest: FactCheckRequestEvent) => Promise<FactCheckFeedback>
     }
   }
 }
