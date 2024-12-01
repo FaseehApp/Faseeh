@@ -46,7 +46,7 @@ export class GrammarEvalErrorEvent extends Event {
   }
 }
 
-export type GrammarEvalResponseEvent = GrammarEvalFeedbackEvent | GrammarEvalErrorEvent
+export type GrammarEvalResponseEvent = GrammarEvalFeedbackEvent
 
 export class FactCheckRequestEvent extends Event {
   static event = 'fact-check-request'
@@ -73,4 +73,4 @@ export class FactCheckErrorEvent extends Event {
   }
 }
 
-export type FactCheckResponseEvent = FactCheckFeedbackEvent | FactCheckErrorEvent
+export type FactCheckResponseEvent = FactCheckFeedbackEvent

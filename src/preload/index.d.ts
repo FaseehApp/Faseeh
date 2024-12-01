@@ -1,6 +1,9 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import { FactCheckRequestEvent } from 'src/types/events'
-import { FactCheckFeedback, GrammarFeedback } from 'src/types/types'
+import {
+  FactCheckRequestEvent,
+  FactCheckResponseEvent,
+  GrammarEvalResponseEvent
+} from 'src/types/events'
 
 declare global {
   interface Window {
@@ -9,9 +12,11 @@ declare global {
       getQuizzes: (transcript: string) => Promise<Quizzes>
     }
     api: {
-      evalGrammar: (grammarEvalRequest: GrammarEvalRequestEvent) => Promise<GrammarFeedback>
+      evalGrammar: (
+        grammarEvalRequest: GrammarEvalRequestEvent
+      ) => Promise<GrammarEvalResponseEvent>
       generateQuiz: (transcript: Transcript) => Promise<QuizResponseEvent>
-      evalFactCheck: (factCheckRequest: FactCheckRequestEvent) => Promise<FactCheckFeedback>
+      evalFactCheck: (factCheckRequest: FactCheckRequestEvent) => Promise<FactCheckResponseEvent>
     }
   }
 }
