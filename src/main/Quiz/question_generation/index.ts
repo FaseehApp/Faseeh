@@ -1,4 +1,4 @@
-import { ChatGroq } from '@langchain/groq'
+import Groq from 'groq-sdk'
 import dotenv from 'dotenv'
 import { readFileSync } from 'fs'
 import { Quiz, Transcript } from '../../../types/types'
@@ -12,26 +12,29 @@ if (!QUIZ_GEN_API) {
   throw new Error('Missing API key. Ensure QUIZ_GEN_API is set in the environment.')
 }
 
-export default async function getQuiz(transcript: Transcript): Promise<Quiz> {
-  const llm = new ChatGroq({
-    model: 'llama-3.2-90b-vision-preview',
-    apiKey: QUIZ_GEN_API,
-    temperature: 0.2
-  })
+const groq = new Groq({ apiKey: QUIZ_GEN_API })
 
+export default async function getQuiz(transcript: Transcript): Promise<Quiz> {
   const systemMessage = readFileSync(prompt, 'utf8') + `\n\nTranscript: ${transcript.text}`
 
   try {
-    const response = await llm.invoke([
-      {
-        role: 'system',
-        content: systemMessage.trim()
-      }
-    ])
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: 'system',
+          content: systemMessage.trim()
+        }
+      ],
+      model: 'llama-3.2-90b-vision-preview',
+      response_format: { type: 'json_object' }
+    })
 
-    console.log('API response content:', response.content) // Log the response to inspect its format
+    console.log('API response content:', chatCompletion.choices[0]?.message?.content) // Log the response to inspect its format
 
-    const parsedResponse: Quiz = JSON.parse(response.content as string)
+    const parsedResponse: Quiz = chatCompletion.choices[0]?.message?.content
+      ? (JSON.parse(chatCompletion.choices[0].message.content) as Quiz)
+      : { questions: [] }
+
     return parsedResponse
   } catch (error) {
     if (error instanceof Error) {

@@ -52,8 +52,8 @@ const MainLayout: React.FC = () => {
       )
       const newQuiz: QuizContentEvent = await window.api.generateQuiz(transcript)
       console.log(newQuiz)
-      // setQuiz(newQuiz)
-      // setShowQuiz(true)
+      setQuiz(newQuiz)
+      setShowQuiz(true)
       setTimeout(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }, 100)
