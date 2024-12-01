@@ -1,5 +1,5 @@
 import { QuestionComponentProp } from '@renderer/types/types'
-import { useEffect, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   FactCheckRequestEvent,
   FactCheckResponseEvent,
