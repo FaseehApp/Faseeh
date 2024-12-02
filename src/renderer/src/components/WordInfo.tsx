@@ -39,7 +39,7 @@ const WordInfo: React.FC = () => {
         setSynonyms(res.antonyms)
         setOpposites(res.antonyms)
         setUsage(res.usage)
-        setDef(res.definition)
+        setDef(selectedWord+" : "+res.definition)
 })
     }
   }, [selectedWord])
