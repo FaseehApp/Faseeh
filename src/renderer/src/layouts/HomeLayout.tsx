@@ -239,8 +239,10 @@ const HomePage: React.FC = () => {
                 <InputField
                   placeholder="Paste YouTube or Vimeo URL"
                   fullWidth
+                  value={videoLink}
+                  onChange={handleInputChange}
                 />
-                <SubmitButton>Generate</SubmitButton>
+                <SubmitButton onClick={handleSubmit}>Generate</SubmitButton>
               </InputFieldWrapper>
               <Typography variant="caption" sx={{ color: theme.colors.lightText }}>
                 Supports Only Youtube For now • No sign-up required
