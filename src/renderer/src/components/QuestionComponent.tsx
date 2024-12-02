@@ -1,7 +1,8 @@
 import { QuestionComponentProp } from '@renderer/types/types'
 import { useState } from 'react'
-import { GrammarEvalErrorEvent } from 'src/types/events'
+// import { GrammarEvalRequestEvent } from 'src/types/events'
 import { GrammarFeedback } from 'src/types/types'
+
 
 const QuestionComponent: React.FC<QuestionComponentProp> = ({ question }) => {
   const [evaluation, setEvaluation] = useState<GrammarFeedback>()
@@ -12,12 +13,13 @@ const QuestionComponent: React.FC<QuestionComponentProp> = ({ question }) => {
     setIsLoading(true)
     try {
       console.log(userInput)
-      console.log("----------------")
-      const response: GrammarFeedback = await window.api.evalGrammar(userInput)
+      const response: GrammarFeedback = await window.api.evalGrammar(
+        new GrammarEvalRequestEvent(userInput)
+      )
       setEvaluation(response)
       setIsAnswered(true)
     } catch (e) {
-      console.error(e)
+      if (e instanceof Error) console.log(e.message)
     } finally {
       setIsLoading(false)
     }

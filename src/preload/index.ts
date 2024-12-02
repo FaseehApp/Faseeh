@@ -1,6 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import { electronAPI } from '@electron-toolkit/preload'
-import { GrammarFeedback, Transcript } from '../types/types'
+import { GrammarFeedback, Transcript, Feedback } from '../types/types'
 import { GrammarEvalRequestEvent, QuizRequestEvent, QuizResponseEvent } from '../types/events'
 
 // Custom APIs for renderer
@@ -11,29 +10,22 @@ const api = {
 
   generateQuiz: async (transcript: Transcript): Promise<QuizResponseEvent> => {
     return await ipcRenderer.invoke(QuizRequestEvent.event, transcript)
+  },
+
+  getPronDiagnosis: async (audioFile: ArrayBuffer, referenceText: string): Promise<Feedback> => {
+    return await ipcRenderer.invoke('recorded-analysis', audioFile, referenceText)
   }
 }
 
+// Exposing APIs to the renderer via contextBridge
 window.addEventListener('DOMContentLoaded', () => {
   console.log('Preload script loaded')
-}) /*  */
+})
 
-// Use `contextBridge` APIs to expose Electron APIs to
-// renderer only if context isolation is enabled, otherwise
-// just add to the DOM global.
+// Exposing APIs to the renderer window
 if (process.contextIsolated) {
-  try {
-    contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
-    contextBridge.exposeInMainWorld('electronAPI', {
-      getQuizzes: (transcript: string) => ipcRenderer.invoke('get-quizzes', transcript)
-    })
-  } catch (error) {
-    console.error(error)
-  }
+  contextBridge.exposeInMainWorld('electronAPI', api)  // Single exposure of `electronAPI`
 } else {
-  // @ts-ignore (define in dts)
-  window.electron = electronAPI
-  // @ts-ignore (define in dts)
-  window.api = api
+  // For non-isolated contexts (legacy), directly expose `electronAPI`
+  window.electronAPI = api
 }

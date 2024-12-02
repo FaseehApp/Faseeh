@@ -57,3 +57,11 @@ export interface FactCheckFeedback {
     explanation: string
   }[]
 }
+
+export interface Feedback {
+  explanation: string
+  mistaken_words: string[]
+  pronunciation_guide: string[]
+  suggestions: string
+  highightedSentence: string
+}

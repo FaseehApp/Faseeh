@@ -6,6 +6,7 @@ declare global {
     electron: ElectronAPI
     electronAPI: {
       getQuizzes: (transcript: string) => Promise<Quizzes>
+      getPronDiagnosis: (audioFile: ArrayBuffer, referenceText: string) => Promise<Feedback>
     }
     api: {
       evalGrammar: (grammarEvalRequest: GrammarEvalRequestEvent) => Promise<GrammarFeedback>
