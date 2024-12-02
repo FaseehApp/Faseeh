@@ -8,6 +8,17 @@ import {
 } from '../../../types/events'
 import { Transcript } from '../../../types/types'
 
+const formatTimestamp = (timestamp: number): string => {
+  try {
+    if (!timestamp || isNaN(timestamp)) return '--:--:--';
+    const ms = timestamp < 10000000000 ? timestamp * 1000 : timestamp;
+    return new Date(ms).toISOString().substr(11, 8);
+  } catch (error) {
+    console.error('Error formatting timestamp:', error);
+    return '--:--:--';
+  }
+};
+
 const QuestionComponent: React.FC<QuestionComponentProp> = ({ question }) => {
   const [grammarEvaluation, setGrammarEvaluation] = useState<GrammarEvalResponseEvent>()
   const [factCheckEvaluation, setFactCheckEvaluation] = useState<FactCheckResponseEvent>()
@@ -109,7 +120,7 @@ const QuestionComponent: React.FC<QuestionComponentProp> = ({ question }) => {
                           <p>Missed Part: {item.missed_part}</p>
                           <p>Correct Information: {item.correct_info}</p>
                           <p>
-                            Timestamp: {new Date(item.timestamp * 1000).toISOString().substr(11, 8)}
+                            Timestamp: {formatTimestamp(item.timestamp)}
                           </p>
                           <p>Explanation: {item.explanation}</p>
                         </div>
