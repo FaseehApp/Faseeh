@@ -24,7 +24,7 @@ Faseeh aims to tackle these challenges by transforming multimedia content, like 
 
 While **pronunciation correction** was planned as a key feature, it was not fully integrated in this version due to technical limitations. However, it remains a priority for future development, and we aim to incorporate it as soon as possible.
 
-![Pronunciation Feature - Planned](resources/test.png)
+![Pronunciation Feature - Planned](resources/pr.mp4)
 
 ## Instructions
 
